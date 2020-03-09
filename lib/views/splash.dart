@@ -28,15 +28,27 @@ class SplashPageState extends State<SplashPage> {
 //------------------------------------------------------------------------------
   Widget _splashContainer() {
     return Center(
-      child: GestureDetector(
-          onTap: _handleTapEvent,
-          child: Container(
-              height: screenHeight * 0.8,
-              width: screenWidth * 0.8,
-              child: Image(image: AssetImage('assets/one.png'),
-              ),
-            ), 
-        ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          GestureDetector(
+              onTap: _handleTapEvent,
+              child: Container(
+                  height: screenHeight * 0.6,
+                  width: screenWidth * 0.8,
+                  child: Image(image: AssetImage('assets/one.png'),
+                  ),
+                ), 
+            ),
+            SizedBox(height: 0.05 * screenHeight,),
+            Text(
+            'Be like Joe, Stay Updated ... ',
+            style: TextStyle(
+                fontSize: textheadsize, color: themeColor),
+          ),
+        ],
+      ),
     );
   }
 //------------------------------------------------------------------------------
