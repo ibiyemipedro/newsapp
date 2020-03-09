@@ -23,7 +23,7 @@ final textloadingsize = 10.0;
 final Color textColor = Colors.white;
 final tabFontSize = 10.0;
 final double imgHeight = 40;
-final fontFam = '';
+
 
 class _DashboardState extends State<Dashboard> {
   final String apiKey = 'b6cec8dfb0fb4717b3b57eec1096760c';
@@ -38,9 +38,8 @@ class _DashboardState extends State<Dashboard> {
     List<NewsArticles> news = [];
 
     for (var u in newsdata) {
-      NewsArticles message = NewsArticles(u["author"], u["title"],
-          u["description"], u["urlToImage"], u["content"]);
-      news.add(message);
+      NewsArticles message = NewsArticles(u["author"], u["title"], u["description"], u["urlToImage"], u["content"]);
+      news.add(message);  
     }
     return news;
   }
@@ -82,14 +81,18 @@ class _DashboardState extends State<Dashboard> {
                 child: ListView.builder(
                   itemCount: snapshot.data.length,
                   itemBuilder: (BuildContext context, int index) {
-                    return ListTile(
-                      leading: Container(
-                          height: 0.5 * screenHeight,
-                          width: 0.1 * screenWidth,
-                          child:
-                              Image.network(snapshot.data[index].urlToImage)),
+                    if(snapshot.data[index].urlToImage == null  || snapshot.data[index].description == null ){
+                      var image = Image(image: AssetImage('assets/one.png'),);
+                      var description = '';
+                      return ListTile(
+                      leading: CircleAvatar(
+                            radius: 25,
+                            child: ClipOval(
+                                child: image
+                            ),
+                        ),
                       title: Text(snapshot.data[index].title),
-                      subtitle: Text(snapshot.data[index].description),
+                      subtitle: Text(description),
                       onTap: () {
                         Navigator.push(
                             context,
@@ -98,6 +101,28 @@ class _DashboardState extends State<Dashboard> {
                                     NewsArticlesDetails(snapshot.data[index])));
                       },
                     );
+
+                    }else{
+                       return ListTile(
+                          leading: CircleAvatar(
+                                radius: 25,
+                                child: ClipOval(
+                                    child: Image.network(
+                                      snapshot.data[index].urlToImage,
+                                    ),
+                                ),
+                            ),
+                          title: Text(snapshot.data[index].title),
+                          subtitle: Text(snapshot.data[index].description),
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                new MaterialPageRoute(
+                                    builder: (context) =>
+                                        NewsArticlesDetails(snapshot.data[index])));
+                          },
+                        );
+                    }
                   },
                 ),
               );
@@ -124,7 +149,8 @@ class _DashboardState extends State<Dashboard> {
                     children: <Widget>[
                       Text(
                         'Bong News',
-                        style: TextStyle(fontSize: amountsize, color: backgroundColor),
+                        style: TextStyle(
+                            fontSize: amountsize, color: backgroundColor),
                       ),
                       SizedBox(height: 5.0)
                     ],
@@ -187,91 +213,92 @@ class NewsArticlesDetails extends StatelessWidget {
   NewsArticlesDetails(this.message);
   @override
   Widget build(BuildContext context) {
-    if (message.author == null || message.title == null || message.urlToImage == null || message.content == null){
+    if (message.author == null ||
+        message.title == null ||
+        message.urlToImage == null ||
+        message.content == null) {
+
+      var image = Image(image: AssetImage('assets/one.png'),);
+      var description = '';
+        
       return Scaffold(
-      backgroundColor: backgroundColor,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: Text(message.title),
-      ),
-      body: DecoratedBox(
-        position: DecorationPosition.background,
-        decoration: BoxDecoration(),
-        child: Center(
-          child: ListView(
-            shrinkWrap: true,
-            padding: EdgeInsets.only(left: 24.0, right: 24.0),
-            children: <Widget>[
-              Container(
-                alignment: Alignment.center,
-                // height: 150.0,
-                child: Image.network(
-                  message.urlToImage,
-                  fit: BoxFit.fitWidth,
+        backgroundColor: backgroundColor,
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          title: Text(message.title),
+        ),
+        body: DecoratedBox(
+          position: DecorationPosition.background,
+          decoration: BoxDecoration(),
+          child: Center(
+            child: ListView(
+              shrinkWrap: true,
+              padding: EdgeInsets.only(left: 24.0, right: 24.0),
+              children: <Widget>[
+                Container(
+                  alignment: Alignment.center,
+                  // height: 150.0,
+                  child: image
                 ),
-              ),
-              SizedBox(height: 10.0),
-              AutoSizeText(
-                message.title ,
-                style: TextStyle(fontSize: textheadsize, color: otherColor),
-              ),
-              SizedBox(height: 15.0),
-              AutoSizeText( message.description,
-                style: TextStyle(fontSize: textheadsize),),
-              SizedBox(height: 30.0),
-             
-            ],
+                SizedBox(height: 10.0),
+                AutoSizeText(
+                  message.title,
+                  style: TextStyle(fontSize: textheadsize, color: otherColor),
+                ),
+                SizedBox(height: 15.0),
+                AutoSizeText(
+                  description,
+                  style: TextStyle(fontSize: textheadsize),
+                ),
+                SizedBox(height: 30.0),
+              ],
+            ),
           ),
         ),
-      ),
-    );
-
-    }else{
-
+      );
+    } else {
       return Scaffold(
-      backgroundColor: backgroundColor,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: Text(message.title),
-      ),
-      body: DecoratedBox(
-        position: DecorationPosition.background,
-        decoration: BoxDecoration(),
-        child: Center(
-          child: ListView(
-            shrinkWrap: true,
-            padding: EdgeInsets.only(left: 24.0, right: 24.0),
-            children: <Widget>[
-              Container(
-                alignment: Alignment.center,
-                // height: 150.0,
-                child: Image.network(
-                  message.urlToImage,
-                  fit: BoxFit.fitWidth,
+        backgroundColor: backgroundColor,
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          title: Text(message.title),
+        ),
+        body: DecoratedBox(
+          position: DecorationPosition.background,
+          decoration: BoxDecoration(),
+          child: Center(
+            child: ListView(
+              shrinkWrap: true,
+              padding: EdgeInsets.only(left: 24.0, right: 24.0),
+              children: <Widget>[
+                Container(
+                  alignment: Alignment.center,
+                  // height: 150.0,
+                  child: Image.network(
+                    message.urlToImage,
+                    fit: BoxFit.fitWidth,
+                  ),
                 ),
-              ),
-              SizedBox(height: 10.0),
-              AutoSizeText(
-                message.title + ' written by ' + message.author,
-                style: TextStyle(fontSize: textheadsize, color: otherColor),
-              ),
-              SizedBox(height: 15.0),
-              AutoSizeText(
-                message.description,
-                style: TextStyle(fontSize: textheadsize),
-              ),
-              SizedBox(height: 30.0),
-              AutoSizeText(
-                message.content,
-                style: TextStyle(fontSize: textbodysize),
-              ),
-            ],
+                SizedBox(height: 10.0),
+                AutoSizeText(
+                  message.title + ' written by ' + message.author,
+                  style: TextStyle(fontSize: textheadsize, color: otherColor),
+                ),
+                SizedBox(height: 15.0),
+                AutoSizeText(
+                  message.description,
+                  style: TextStyle(fontSize: textheadsize),
+                ),
+                SizedBox(height: 30.0),
+                AutoSizeText(
+                  message.content,
+                  style: TextStyle(fontSize: textbodysize),
+                ),
+              ],
+            ),
           ),
         ),
-      ),
-    );
-
+      );
     }
-    
   }
 }
